@@ -32,8 +32,10 @@ namespace Full_GRASP_And_SOLID
             printer.PrintRecipe(recipe);
             printer = new FilePrinter();
             printer.PrintRecipe(recipe);
+            Console.WriteLine($"Cooked: {recipe.cook}");
             recipe.Cook();
             Thread.Sleep(500); // 0.5 segundos
+            Console.WriteLine($"Cooked: {recipe.cook}");
         }
 
         private static void PopulateCatalogs()
