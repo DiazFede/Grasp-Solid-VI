@@ -56,42 +56,41 @@ public class Recipe : IRecipeContent
 
     public int GetCookTime()
     {
-        int TotalCookTime = 0;
+        int totalCookTime = 0;
         foreach (BaseStep step in this.steps)
         {
-            TotalCookTime += step.Time;
+            totalCookTime += step.Time;
         }
-        return TotalCookTime;
+        return totalCookTime;
     }
 
     public void Cook()
     {
-        int totalTime = GetCookTime();
+        if (!this.cook)
+        {
+            int totalTime = this.GetCookTime();
 
-        RecipeTimerAdapter timerAdapter = new(this);
+            RecipeTimerAdapter timerAdapter = new RecipeTimerAdapter(this);
 
-        countdownTimer = new CountdownTimer();
-        countdownTimer.Register(totalTime, timerAdapter);
+            CountdownTimer countdownTimer = new CountdownTimer();
+            countdownTimer.Register(totalTime, timerAdapter);
+        }
     }
 
-    public void TimeOut()
-    {
-        this.cook = true;
-        Console.WriteLine("Listo");
-    }
     public class RecipeTimerAdapter : TimerClient
     {
-        private Recipe recipe;
+        public Recipe Recipe { get;  set; }
 
         public RecipeTimerAdapter(Recipe recipe)
         {
-            this.recipe = recipe;
+            this.Recipe = recipe ?? throw new ArgumentNullException(nameof(recipe));
         }
 
         public void TimeOut()
         {
-            recipe.TimeOut();
+            this.Recipe.cook = true;
         }
     }
+
 }
 }
